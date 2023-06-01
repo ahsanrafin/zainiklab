@@ -27,16 +27,27 @@ class Recaptcha implements ValidationRule
 
             User::where('email', \request()->email)
                 ->where('role_id', 2)
-                ->increment('login_failed_attempts');
+                ->increment('failed_login_attempts');
 
-            $userBlocked = User::where('email', \request()->email)
+            $userBlockedfor15Minutes = User::where('email', \request()->email)
                                 ->where('role_id', 2)
-                                ->where('login_failed_attempts', 3)
-                                ->orWhere('login_failed_attempts', 6)
+                                ->where('failed_login_attempts', 3)
                                 ->first();
 
-            if(isset($userBlocked)) {
-                $userBlocked->update([
+            $userBlockedfor45Minutes = User::where('email', \request()->email)
+                                ->where('role_id', 2)
+                                ->where('failed_login_attempts', 6)
+                                ->first();
+
+            if(isset($userBlockedfor15Minutes)) {
+                $userBlockedfor15Minutes->update([
+                    'is_blocked' => 1,
+                    'blocked_until' => now()->addMinutes(15)
+                ]);
+            }
+
+            if(isset($userBlockedfor45Minutes)) {
+                $userBlockedfor45Minutes->update([
                     'is_blocked' => 1,
                     'blocked_until' => now()->addMinutes(45)
                 ]);

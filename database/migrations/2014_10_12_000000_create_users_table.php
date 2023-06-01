@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->text('about_me');
-            $table->integer('login_failed_attempts')->default(0);
+            $table->integer('failed_login_attempts')->default(0);
             $table->text('avatar');
             $table->timestamp('blocked_until')->nullable();
             $table->timestamp('email_verified_at')->nullable();
