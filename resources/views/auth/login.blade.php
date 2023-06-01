@@ -9,7 +9,12 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                 </div>
             @endif
-            
+            @if($errors->has('message45Min'))
+                <div class="alert bg-danger text-white alert-dismissible show" style="font-size: 0.875em"><strong>{{ $errors->first('message45Min') }}</strong>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            @endif
+
             <div class="card">
                 <div class="card-header">{{ __('Login') }}</div>
 

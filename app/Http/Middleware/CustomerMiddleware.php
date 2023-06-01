@@ -3,6 +3,7 @@
 namespace App\Http\Middleware;
 
 use Closure;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,16 +18,24 @@ class CustomerMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         //Business logic for Block/Unblock for Customer
-        if (Auth::check() && Auth::user()->is_blocked) {
-            $bannedUser = Auth::user()->is_blocked == 1;
+        if (Auth::check() && Auth::user()->is_blocked && auth()->user()->blocked_until && now()->lessThan(auth()->user()->blocked_until)) {
+            $blockedMinutes = now()->diffInMinutes(auth()->user()->blocked_until);
+            $blockeUser = Auth::user()->is_blocked == 1;
             Auth::logout();
 
-            if ($bannedUser == 1) {
+            if ($blockeUser == 1) {
                 $message = "Your account has been blocked, Please contact with Administrator.";
             }
 
+            if ($blockedMinutes > 45) {
+                $message45Minutes = 'Your account has been suspended. Please contact administrator.';
+            } else {
+                $message45Min = 'Your account has been suspended for '.$blockedMinutes.' '.Str::plural('minute', $blockedMinutes).'. Please contact administrator.';
+            }
+
             return redirect()->route('login')->with('status', $message)->withErrors([
-                'blocked' => 'Your account has been blocked, Please contact with Administrator.'
+                'blocked' => 'Your account has been blocked, Please contact with Administrator.',
+                'message45Min' => $message45Min
             ]);
         }
 

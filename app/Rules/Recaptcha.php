@@ -37,7 +37,8 @@ class Recaptcha implements ValidationRule
 
             if(isset($userBlocked)) {
                 $userBlocked->update([
-                    'is_blocked' => 1
+                    'is_blocked' => 1,
+                    'blocked_until' => now()->addMinutes(45)
                 ]);
             }
 

@@ -20,6 +20,7 @@ return new class extends Migration
             $table->text('about_me');
             $table->integer('login_failed_attempts')->default(0);
             $table->text('avatar');
+            $table->timestamp('blocked_until')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

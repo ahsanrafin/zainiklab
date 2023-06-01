@@ -23,6 +23,8 @@ class User extends Authenticatable
         'role_id',
         'is_blocked',
         'about_me',
+        'blocked_until',
+        'login_failed_attempts',
         'avatar',
         'password',
     ];
